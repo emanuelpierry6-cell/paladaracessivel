@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#085d77">
+  <meta name="description" content="Paladar Acessível: encontre informações sobre gastronomia e acessibilidade em João Pessoa.">
+  <title>Paladar Acessível — Gastronomia Inclusiva em João Pessoa</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --brand-orange: #ea580c;
+      --brand-orange-hover: #c2410c;
+      --brand-blue: #085d77;
+      --brand-gold: #c58c22;
+      --bg-base: #f8fafc;
+      --bg-surface: #fff;
+      --border-subtle: #e2e8f0;
+      --border-strong: #cbd5e1;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --success: #15803d;
+      --radius-lg: 18px;
+      --radius-md: 11px;
+      --shadow-sm: 0 2px 10px rgba(15, 23, 42, .05);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Plus Jakarta Sans", system-ui, sans-serif; -webkit-tap-highlight-color: transparent; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg-base); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; transition: background .2s, color .2s; }
+    button, input, select, textarea { font: inherit; }
+    button { cursor: pointer; }
+    a { color: inherit; }
+    .skip-link { position: absolute; left: -9999px; top: 8px; z-index: 1000; background: white; padding: 10px; }
+    .skip-link:focus { left: 8px; }
+    header { background: var(--bg-surface); border-bottom: 1px solid var(--border-subtle); position: sticky; top: 0; z-index: 50; }
+    .header-container { max-width: 1120px; margin: auto; padding: 0 24px; min-height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .brand-logo-link { display: flex; align-items: center; text-decoration: none; cursor: pointer; min-width: 0; }
+    .brand-logo-image { display:block; width: min(190px, 34vw); max-height: 68px; object-fit: contain; object-position: left center; }
+    .logo-badge-icon { width: 44px; height: 44px; flex: 0 0 44px; background: var(--brand-orange); color: white; border-radius: 12px; display: grid; place-items: center; font-size: 1.35rem; }
+    .logo-texts { display: flex; flex-direction: column; }
+    .logo-main-text { font-size: 1.08rem; font-weight: 800; color: var(--brand-blue); letter-spacing: -.5px; line-height: 1.15; }
+    .logo-sub-text { font-size: .68rem; font-weight: 800; color: var(--brand-orange); letter-spacing: 1.35px; text-transform: uppercase; }
+    .header-actions { display: flex; align-items: center; gap: 12px; }
+    .location-tag { font-size: .78rem; font-weight: 700; color: var(--brand-blue); background: #ecfeff; padding: 7px 12px; border-radius: 20px; border: 1px solid #cffafe; white-space: nowrap; }
+    .acc-toolbar { display: flex; align-items: center; background: var(--bg-base); border: 1px solid var(--border-subtle); border-radius: 30px; padding: 3px; }
+    .acc-btn { background: transparent; border: 0; padding: 7px 10px; font-size: .75rem; font-weight: 800; color: var(--text-muted); border-radius: 20px; }
+    .acc-btn:hover, .acc-btn:focus-visible { background: #e2e8f0; color: var(--text-main); outline: 2px solid var(--brand-blue); }
+    nav.nav-tabs-wrapper { background: var(--bg-surface); border-bottom: 1px solid var(--border-subtle); }
+    .tabs-container { max-width: 1120px; margin: auto; padding: 0 24px; display: flex; gap: 28px; overflow-x: auto; }
+    .nav-btn { background: transparent; border: 0; padding: 16px 0; font-size: .9rem; font-weight: 700; color: var(--text-muted); border-bottom: 3px solid transparent; white-space: nowrap; }
+    .nav-btn:hover { color: var(--brand-blue); }
+    .nav-btn.active { color: var(--brand-orange); border-bottom-color: var(--brand-orange); }
+    main { flex: 1; width: 100%; max-width: 1120px; margin: auto; padding: 34px 24px 48px; }
+    .tab-content { display: none; animation: fadeIn .25s ease; }
+    .tab-content.active { display: block; }
+    .hero-section { margin-bottom: 26px; }
+    .hero-title { color: var(--brand-blue); font-size: clamp(1.5rem, 4vw, 2rem); font-weight: 800; letter-spacing: -.8px; margin-bottom: 9px; line-height: 1.2; }
+    .hero-subtitle { color: var(--text-muted); font-size: .95rem; max-width: 680px; line-height: 1.65; }
+    .card { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 23px; box-shadow: var(--shadow-sm); }
+    .filter-header { font-size: .75rem; font-weight: 800; text-transform: uppercase; letter-spacing: .8px; color: var(--text-muted); margin-bottom: 13px; }
+    .chips-grid { display: flex; flex-wrap: wrap; gap: 9px; margin-bottom: 18px; }
+    .filter-chip { background: var(--bg-base); border: 1px solid var(--border-subtle); padding: 10px 13px; border-radius: var(--radius-md); font-size: .82rem; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 8px; }
+    .filter-chip:hover { border-color: var(--brand-orange); }
+    .filter-chip.active { background: var(--brand-orange); color: white; border-color: var(--brand-orange); }
+    .controls-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 11px; }
+    .custom-input { width: 100%; padding: 12px 13px; border: 1px solid var(--border-subtle); border-radius: var(--radius-md); font-size: .88rem; font-weight: 500; background: var(--bg-surface); color: var(--text-main); outline: none; }
+    .custom-input:focus { border-color: var(--brand-orange); box-shadow: 0 0 0 3px rgba(234,88,12,.12); }
+    .results-line { color: var(--text-muted); font-size: .82rem; margin: 22px 2px 12px; }
+    .restaurant-card { overflow: hidden; padding: 0; margin-bottom: 22px; }
+    .restaurant-cover { position: relative; }
+    .gallery-main { width: 100%; height: 330px; display: block; object-fit: cover; background: #e2e8f0; cursor: zoom-in; }
+    .gallery-thumbs { display: grid; grid-template-columns: repeat(6, 1fr); gap: 7px; padding: 10px 16px; background: #f1f5f9; }
+    .gallery-thumb { border: 2px solid transparent; border-radius: 8px; overflow: hidden; padding: 0; background: transparent; height: 72px; }
+    .gallery-thumb.active { border-color: var(--brand-orange); }
+    .gallery-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .restaurant-body { padding: 22px; }
+    .photo-placeholder { height: 250px; display:grid; place-items:center; background:linear-gradient(135deg,#e0f2fe,#dbeafe 45%,#fef3c7); color:#085d77; font-size:1.25rem; font-weight:800; letter-spacing:.02em; text-align:center; padding:20px; }
+    .form-message.error { background:#fef2f2; color:#991b1b; }
+    .form-message.success { background:#f0fdf4; color:#166534; }
+    .restaurant-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    .restaurant-title { font-size: 1.35rem; color: var(--brand-blue); font-weight: 800; margin-bottom: 5px; }
+    .restaurant-category { color: var(--text-muted); font-size: .85rem; }
+    .rating { font-weight: 800; color: #9a6700; background: #fffbeb; border: 1px solid #fde68a; padding: 8px 11px; border-radius: 10px; white-space: nowrap; }
+    .restaurant-address { display: flex; gap: 9px; align-items: flex-start; margin: 17px 0; color: var(--text-muted); font-size: .88rem; line-height: 1.5; }
+    .access-heading { font-size: .92rem; font-weight: 800; margin: 20px 0 11px; }
+    .access-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 10px; }
+    .access-item { border: 1px solid #bbf7d0; background: #f0fdf4; border-radius: 11px; padding: 12px; display: flex; align-items: center; gap: 9px; font-size: .83rem; font-weight: 700; color: #166534; }
+    .access-item .check { font-size: 1rem; }
+    .info-note { background: #f8fafc; border-left: 3px solid var(--brand-blue); color: var(--text-muted); padding: 11px 13px; margin-top: 17px; border-radius: 0 8px 8px 0; font-size: .76rem; line-height: 1.5; }
+    .map-link { display: inline-flex; align-items: center; gap: 7px; margin-top: 17px; padding: 11px 15px; border-radius: 10px; background: var(--brand-blue); color: white; text-decoration: none; font-weight: 700; font-size: .84rem; }
+    .map-link:hover { background: #06485c; }
+    .no-results { display: none; text-align: center; margin-top: 22px; padding: 35px 18px; border: 1px dashed var(--border-strong); border-radius: var(--radius-lg); background: white; color: var(--text-muted); }
+    .about-card { max-width: 760px; margin: auto; }
+    .about-card h2 { color: var(--brand-orange); font-size: 1.4rem; margin-bottom: 13px; }
+    .about-card p { color: var(--text-main); line-height: 1.75; margin-bottom: 18px; }
+    .dev-credit { display: block; border-top: 1px solid var(--border-subtle); padding-top: 14px; color: var(--text-muted); font-size: .75rem; font-weight: 700; }
+    .resources-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap: 15px; margin-top: 20px; }
+    .resource-item { background: white; border: 1px solid var(--border-subtle); border-left: 4px solid var(--brand-blue); border-radius: 12px; padding: 18px; }
+    .resource-item h3 { color: var(--brand-blue); font-size: .92rem; margin-bottom: 7px; }
+    .resource-item p { color: var(--text-muted); font-size: .82rem; line-height: 1.55; }
+    .form-wrap { max-width: 580px; margin: auto; }
+    .form-wrap h2 { color: var(--brand-blue); font-size: 1.2rem; margin-bottom: 7px; }
+    .form-intro { color: var(--text-muted); font-size: .85rem; line-height: 1.5; margin-bottom: 20px; }
+    .form-group { margin-bottom: 15px; }
+    .form-label { display: block; font-size: .83rem; font-weight: 700; margin-bottom: 6px; }
+    textarea.custom-input { resize: vertical; min-height: 95px; }
+    .submit-btn { width: 100%; border: 0; background: var(--brand-orange); color: white; padding: 13px 18px; border-radius: var(--radius-md); font-weight: 800; }
+    .submit-btn:hover { background: var(--brand-orange-hover); }
+    .form-message { display: none; margin-top: 13px; padding: 12px; background: #eff6ff; border-radius: 9px; color: #1e40af; font-size: .82rem; line-height: 1.5; }
+    footer { background: white; border-top: 1px solid var(--border-subtle); padding: 20px; text-align: center; font-size: .78rem; color: var(--text-muted); }
+    .lightbox { display: none; position: fixed; inset: 0; z-index: 200; background: rgba(2,6,23,.92); align-items: center; justify-content: center; padding: 20px; }
+    .lightbox.open { display: flex; }
+    .lightbox img { max-width: min(100%, 1100px); max-height: 85vh; object-fit: contain; }
+    .lightbox-close { position: absolute; top: 16px; right: 20px; color: white; border: 0; background: rgba(255,255,255,.15); border-radius: 50%; width: 42px; height: 42px; font-size: 1.5rem; }
+    body.high-contrast { background: #000 !important; color: #ff0 !important; }
+    body.high-contrast header, body.high-contrast nav, body.high-contrast .card, body.high-contrast .filter-chip, body.high-contrast .custom-input, body.high-contrast footer, body.high-contrast .resource-item, body.high-contrast .no-results { background: #111 !important; border-color: #ff0 !important; color: #ff0 !important; box-shadow: none; }
+    body.high-contrast .hero-title, body.high-contrast .restaurant-title, body.high-contrast .about-card h2, body.high-contrast .resource-item h3 { color: #ff0 !important; }
+    body.high-contrast p, body.high-contrast span, body.high-contrast label, body.high-contrast .restaurant-category, body.high-contrast .restaurant-address { color: #ff0 !important; }
+    body.high-contrast .access-item { background: #111 !important; border-color: #ff0 !important; color: #ff0 !important; }
+    body.high-contrast .nav-btn.active { border-bottom-color: #ff0; color: #ff0; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 700px) {
+      .header-container { padding: 10px 15px; min-height: 70px; }
+      .tabs-container { padding: 0 16px; gap: 20px; }
+      main { padding: 27px 15px 38px; }
+      .location-tag { display: none; }
+      .controls-grid { grid-template-columns: 1fr; }
+      .gallery-main { height: 250px; }
+      .gallery-thumbs { grid-template-columns: repeat(4, 1fr); }
+      .gallery-thumb { height: 62px; }
+      .access-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 390px) {
+      .brand-logo-image { width: min(154px, 42vw); max-height: 58px; }
+      .acc-btn { padding: 7px 8px; }
+    }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+  <header>
+    <div class="header-container">
+      <a class="brand-logo-link" href="#" onclick="switchTab('inicio'); return false;" aria-label="Paladar Acessível — início">
+        <img class="brand-logo-image" src="logo-paladar-acessivel.svg" alt="Paladar Acessível — Gastronomia Inclusiva">
+      </a>
+      <div class="header-actions">
+        <div class="location-tag">📍 João Pessoa, PB</div>
+        <div class="acc-toolbar" aria-label="Ferramentas de acessibilidade">
+          <button class="acc-btn" type="button" onclick="toggleContrast()" aria-pressed="false" id="contrast-btn">Contraste</button>
+          <button class="acc-btn" type="button" onclick="changeFontSize(1)" aria-label="Aumentar fonte">A+</button>
+          <button class="acc-btn" type="button" onclick="changeFontSize(-1)" aria-label="Diminuir fonte">A−</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <nav class="nav-tabs-wrapper" aria-label="Navegação principal">
+    <div class="tabs-container">
+      <button class="nav-btn active" id="tab-btn-inicio" type="button" onclick="switchTab('inicio')" aria-current="page">Explorar</button>
+      <button class="nav-btn" id="tab-btn-sobre" type="button" onclick="switchTab('sobre')">Sobre</button>
+      <button class="nav-btn" id="tab-btn-recursos" type="button" onclick="switchTab('recursos')">Padrões</button>
+      <button class="nav-btn" id="tab-btn-sugerir" type="button" onclick="switchTab('sugerir')">Indicar</button>
+    </div>
+  </nav>
+
+  <main id="conteudo">
+    <section id="tab-inicio" class="tab-content active">
+      <div class="hero-section">
+        <h1 class="hero-title">Encontre gastronomia acessível em João Pessoa</h1>
+        <p class="hero-subtitle">Consulte informações sobre estabelecimentos, localização e recursos de acessibilidade para planejar sua experiência com mais autonomia e conforto.</p>
+      </div>
+
+      <div class="card">
+        <div class="filter-header">Filtrar por infraestrutura e recursos</div>
+        <div class="chips-grid" aria-label="Filtros de acessibilidade">
+          <button class="filter-chip" type="button" data-filter="mobilidade" aria-pressed="false"><span>♿</span> Mobilidade reduzida</button>
+          <button class="filter-chip" type="button" data-filter="visual" aria-pressed="false"><span>👁️</span> Deficiência visual</button>
+          <button class="filter-chip" type="button" data-filter="auditiva" aria-pressed="false"><span>🧏</span> Deficiência auditiva</button>
+          <button class="filter-chip" type="button" data-filter="neurodiversidade" aria-pressed="false"><span>🧩</span> Autismo / Neurodiversidade</button>
+        </div>
+        <div class="controls-grid">
+          <input id="search-name" class="custom-input" type="search" placeholder="Buscar restaurante..." aria-label="Buscar restaurante">
+          <select id="select-bairro" class="custom-input" aria-label="Filtrar por bairro">
+            <option value="">Todos os bairros</option>
+            <option value="Cabo Branco">Cabo Branco</option>
+            <option value="Bancários">Bancários</option>
+            <option value="Manaíra">Manaíra</option>
+            <option value="Tambaú">Tambaú</option>
+            <option value="Bessa">Bessa</option>
+            <option value="Altiplano">Altiplano</option>
+          </select>
+          <select id="select-culinaria" class="custom-input" aria-label="Filtrar por culinária">
+            <option value="">Todas as culinárias</option>
+            <option value="Regional">Regional</option>
+            <option value="Galeteria e petiscaria">Galeteria e petiscaria</option>
+            <option value="Hamburgueria">Hamburgueria</option>
+            <option value="Bar e restaurante">Bar e restaurante</option>
+            <option value="Frutos do Mar">Frutos do Mar</option>
+            <option value="Contemporânea">Contemporânea</option>
+            <option value="Pizzaria">Pizzaria</option>
+            <option value="Frutos do mar">Frutos do mar</option>
+            <option value="Culinária regional e frutos do mar">Culinária regional e frutos do mar</option>
+            <option value="Bar e restaurante">Bar e restaurante</option>
+          </select>
+        </div>
+      </div>
+
+      <p class="results-line" id="results-count" aria-live="polite">9 estabelecimentos encontrados</p>
+
+      <article class="card restaurant-card" id="matuto-card"
+        data-name="Matuto Teimoso" data-bairro="Cabo Branco" data-culinaria="Regional"
+        data-access="mobilidade visual">
+        <div class="restaurant-cover">
+          <img class="gallery-main" id="main-photo" src="imagens/matuto-teimoso-01.jpg" alt="Interior do restaurante Matuto Teimoso, com mesas e bancos de madeira" onclick="openLightbox(this.src)" onerror="this.alt='Fotografia não encontrada. Verifique a pasta imagens.'">
+          <div class="gallery-thumbs" aria-label="Galeria de fotos do Matuto Teimoso">
+            <button class="gallery-thumb active" type="button" data-src="imagens/matuto-teimoso-01.jpg" aria-label="Ver foto 1"><img src="imagens/matuto-teimoso-01.jpg" alt=""></button>
+            <button class="gallery-thumb" type="button" data-src="imagens/matuto-teimoso-02.jpg" aria-label="Ver foto 2"><img src="imagens/matuto-teimoso-02.jpg" alt=""></button>
+            <button class="gallery-thumb" type="button" data-src="imagens/matuto-teimoso-03.jpg" aria-label="Ver foto 3"><img src="imagens/matuto-teimoso-03.jpg" alt=""></button>
+            <button class="gallery-thumb" type="button" data-src="imagens/matuto-teimoso-04.jpg" aria-label="Ver foto 4"><img src="imagens/matuto-teimoso-04.jpg" alt=""></button>
+            <button class="gallery-thumb" type="button" data-src="imagens/matuto-teimoso-05.jpg" aria-label="Ver foto 5"><img src="imagens/matuto-teimoso-05.jpg" alt=""></button>
+            <button class="gallery-thumb" type="button" data-src="imagens/matuto-teimoso-06.jpg" aria-label="Ver foto 6"><img src="imagens/matuto-teimoso-06.jpg" alt=""></button>
+            <button class="gallery-thumb" type="button" data-src="imagens/matuto-teimoso-07.jpg" aria-label="Ver foto 7"><img src="imagens/matuto-teimoso-07.jpg" alt=""></button>
+          </div>
+        </div>
+        <div class="restaurant-body">
+          <div class="restaurant-top">
+            <div>
+              <h2 class="restaurant-title">Matuto Teimoso</h2>
+              <p class="restaurant-category">Culinária regional · Cabo Branco</p>
+            </div>
+            <div class="rating" aria-label="Avaliação 4,5 de 5">★ 4,5</div>
+          </div>
+          <p class="restaurant-address"><span aria-hidden="true">📍</span><span>Avenida Cabo Branco, 1108 – Cabo Branco, João Pessoa – PB, 58039-010.</span></p>
+
+          <h3 class="access-heading">Recursos de acessibilidade informados</h3>
+          <div class="access-grid">
+            <div class="access-item"><span class="check" aria-hidden="true">✓</span> Rampa de acesso</div>
+            <div class="access-item"><span class="check" aria-hidden="true">✓</span> Piso tátil</div>
+            <div class="access-item"><span class="check" aria-hidden="true">✓</span> Banheiro acessível</div>
+            <div class="access-item"><span class="check" aria-hidden="true">✓</span> Iluminação adequada</div>
+          </div>
+          <p class="info-note">As informações de acessibilidade e a avaliação foram fornecidas para este cadastro. Recomenda-se confirmar diretamente com o estabelecimento as condições atuais e os detalhes de cada recurso antes da visita.</p>
+          <a class="map-link" href="https://www.google.com/maps/search/?api=1&query=Matuto+Teimoso+Avenida+Cabo+Branco+1108+Joao+Pessoa+PB" target="_blank" rel="noopener noreferrer">↗ Ver localização no mapa</a>
+        </div>
+      </article>
+
+      <article class="card restaurant-card" id="esquina-card"
+        data-name="Esquina do Vavá" data-bairro="Bancários" data-culinaria="Galeteria e petiscaria"
+        data-access="mobilidade">
+        <div class="restaurant-cover">
+          <img class="gallery-main" src="imagens/esquina-do-vava-01.jpg" alt="Interior do restaurante Esquina do Vavá" onclick="openLightbox(this.src)" onerror="this.alt='Fotografia não encontrada. Verifique a pasta imagens.'">
+          <div class="gallery-thumbs" aria-label="Galeria de fotos do Esquina do Vavá">
+            <button class="gallery-thumb active" type="button" data-src="imagens/esquina-do-vava-01.jpg" aria-label="Ver foto 1"><img src="imagens/esquina-do-vava-01.jpg" alt=""></button>
+            <button class="gallery-thumb" type="button" data-src="imagens/esquina-do-vava-02.jpg" aria-label="Ver foto 2"><img src="imagens/esquina-do-vava-02.jpg" alt=""></button>
+            <button class="gallery-thumb" type="button" data-src="imagens/esquina-do-vava-03.jpg" aria-label="Ver foto 3"><img src="imagens/esquina-do-vava-03.jpg" alt=""></button>
+          </div>
+        </div>
+        <div class="restaurant-body">
+          <div class="restaurant-top">
+            <div>
+              <h2 class="restaurant-title">Esquina do Vavá</h2>
+              <p class="restaurant-category">Galeteria e petiscaria · Bancários</p>
+            </div>
+            <div class="rating" aria-label="Avaliação 4,5 de 5">★ 4,5</div>
+          </div>
+          <p class="restaurant-address"><span aria-hidden="true">📍</span><span>Rua Bancário Waldemar de Mesquita Accioly, 449 – Bancários, João Pessoa – PB, 58051-420.</span></p>
+          <h3 class="access-heading">Recursos de acessibilidade informados</h3>
+          <div class="access-grid">
+            <div class="access-item"><span class="check" aria-hidden="true">✓</span> Rampa de acesso</div>
+          </div>
+          <p class="info-note">A informação sobre a rampa de acesso e a avaliação foi fornecida para este cadastro. Recomenda-se confirmar diretamente com o estabelecimento as condições atuais e os detalhes do recurso antes da visita.</p>
+          <a class="map-link" href="https://www.google.com/maps/search/?api=1&query=Esquina+do+Vava+Rua+Bancario+Waldemar+de+Mesquita+Accioly+449+Joao+Pessoa+PB" target="_blank" rel="noopener noreferrer">↗ Ver localização no mapa</a>
+        </div>
+      </article>
+
+      <article class="card restaurant-card" id="nostra-card"
+        data-name="Nostra Prime" data-bairro="Bancários" data-culinaria="Bar e restaurante"
+        data-access="mobilidade">
+        <div class="restaurant-cover">
+          <img class="gallery-main" src="imagens/nostra-prime-01.jpg" alt="Fachada do Nostra Prime, com entrada e rampa de acesso" onclick="openLightbox(this.src)" onerror="this.alt='Fotografia não encontrada. Verifique a pasta imagens.'">
+          <div class="gallery-thumbs" aria-label="Galeria de fotos do Nostra Prime">
+            <button class="gallery-thumb active" type="button" data-src="imagens/nostra-prime-01.jpg" aria-label="Ver foto 1"><img src="imagens/nostra-prime-01.jpg" alt=""></button>
+          </div>
+        </div>
+        <div class="restaurant-body">
+          <div class="restaurant-top">
+            <div>
+              <h2 class="restaurant-title">Nostra Prime</h2>
+              <p class="restaurant-category">Bar e restaurante · Bancários</p>
+            </div>
+            <div class="rating" aria-label="Avaliação 5,0 de 5">★ 5,0</div>
+          </div>
+          <p class="restaurant-address"><span aria-hidden="true">📍</span><span>Rua Bancário Waldemar de Mesquita Accioly, 1410 – Bancários, João Pessoa – PB, 58051-420.</span></p>
+          <h3 class="access-heading">Recursos de acessibilidade informados</h3>
+          <div class="access-grid">
+            <div class="access-item"><span class="check" aria-hidden="true">✓</span> Rampa de acesso</div>
+            <div class="access-item"><span class="check" aria-hidden="true">✓</span> Banheiro com espaço ampliado</div>
+          </div>
+          <p class="info-note">As informações sobre a rampa de acesso, o espaço do banheiro e a avaliação foram fornecidas para este cadastro. Recomenda-se confirmar diretamente com o estabelecimento as condições atuais e as dimensões de circulação antes da visita.</p>
+          <a class="map-link" href="https://www.google.com/maps/search/?api=1&query=Nostra+Prime+Rua+Bancario+Waldemar+de+Mesquita+Accioly+1410+Joao+Pessoa+PB" target="_blank" rel="noopener noreferrer">↗ Ver localização no mapa</a>
+        </div>
+      </article>
+
+
+      <article class="card restaurant-card" id="geisel-card"
+        data-name="Geisel Burguer" data-bairro="Bancários" data-culinaria="Hamburgueria"
+        data-access="mobilidade">
+        <div class="restaurant-cover">
+          <img class="gallery-main" src="imagens/geisel-burguer-01.jpg" alt="Fachada do Geisel Burguer, com entrada do estabelecimento" onclick="openLightbox(this.src)" onerror="this.alt='Fotografia não encontrada. Verifique a pasta imagens.'">
+          <div class="gallery-thumbs" aria-label="Galeria de fotos do Geisel Burguer">
+            <button class="gallery-thumb active" type="button" data-src="imagens/geisel-burguer-01.jpg" aria-label="Ver foto 1"><img src="imagens/geisel-burguer-01.jpg" alt=""></button>
+          </div>
+        </div>
+        <div class="restaurant-body">
+          <div class="restaurant-top">
+            <div>
+              <h2 class="restaurant-title">Geisel Burguer</h2>
+              <p class="restaurant-category">Hamburgueria · Bancários</p>
+            </div>
+            <div class="rating" aria-label="Avaliação 4,8 de 5">★ 4,8</div>
+          </div>
+          <p class="restaurant-address"><span aria-hidden="true">📍</span><span>Rua Bancário Waldemar de Mesquita Accioly, 487 – Bancários, João Pessoa – PB, 58051-420.</span></p>
+          <h3 class="access-heading">Recursos de acessibilidade informados</h3>
+          <div class="access-grid">
+            <div class="access-item"><span class="check" aria-hidden="true">✓</span> Rampa de acesso</div>
+            <div class="access-item"><span class="check" aria-hidden="true">✓</span> Mesa acessível</div>
+          </div>
+          <p class="info-note">As informações sobre a rampa de acesso, a mesa acessível e a avaliação foram fornecidas para este cadastro. Recomenda-se confirmar diretamente com o estabelecimento as condições atuais e a disponibilidade de mesa adequada antes da visita.</p>
+          <a class="map-link" href="https://www.google.com/maps/search/?api=1&query=Geisel+Burguer+Rua+Bancario+Waldemar+de+Mesquita+Accioly+487+Joao+Pessoa+PB" target="_blank" rel="noopener noreferrer">↗ Ver localização no mapa</a>
+        </div>
+      </article>
+
+
+      <article class="card restaurant-card" id="pafe-card"
+        data-name="Pafé Rafaelli" data-bairro="Bancários" data-culinaria="Cafeteria"
+        data-access="mobilidade">
+        <div class="restaurant-cover">
+          <img class="gallery-main" src="imagens/pafe-rafaelli-01.jpg" alt="Fachada do Pafé Rafaelli, com mesas na área externa" onclick="openLightbox(this.src)" onerror="this.alt='Fotografia não encontrada. Verifique a pasta imagens.'">
+          <div class="gallery-thumbs" aria-label="Galeria de fotos do Pafé Rafaelli">
+            <button class="gallery-thumb active" type="button" data-src="imagens/pafe-rafaelli-01.jpg" aria-label="Ver foto 1"><img src="imagens/pafe-rafaelli-01.jpg" alt=""></button>
+          </div>
+        </div>
+        <div class="restaurant-body">
+          <div class="restaurant-top">
+            <div>
+              <h2 class="restaurant-title">Pafé Rafaelli</h2>
+              <p class="restaurant-category">Cafeteria · Bancários</p>
+            </div>
+            <div class="rating" aria-label="Avaliação 4,2 de 5">★ 4,2</div>
+          </div>
+          <p class="restaurant-address"><span aria-hidden="true">📍</span><span>Rua Bancário Waldemar de Mesquita Accioly, 511 – Bancários, João Pessoa – PB, 58051-420.</span></p>
+          <h3 class="access-heading">Recursos de acessibilidade informados</h3>
+          <div class="access-grid">
+            <div class="access-item"><span class="check" aria-hidden="true">✓</span> Rampa de acesso</div>
+            <div class="access-item"><span class="check" aria-hidden="true">✓</span> Mesa acessível</div>
+          </div>
+          <p class="info-note">As informações sobre a rampa de acesso, a mesa acessível e a avaliação foram fornecidas para este cadastro. Recomenda-se confirmar diretamente com o estabelecimento as condições atuais e a disponibilidade de mesa adequada antes da visita.</p>
+          <a class="map-link" href="https://www.google.com/maps/search/?api=1&query=Pafe+Rafaelli+Rua+Bancario+Waldemar+de+Mesquita+Accioly+511+Joao+Pessoa+PB" target="_blank" rel="noopener noreferrer">↗ Ver localização no mapa</a>
+        </div>
+      </article>
+
+
+      <article class="card restaurant-card" id="ja-frios-card"
+        data-name="Já: Frios e Crustáceos" data-bairro="Bancários" data-culinaria="Frutos do Mar"
+        data-access="mobilidade">
+        <div class="restaurant-cover">
+          <img class="gallery-main" src="imagens/ja-frios-01.jpg" alt="Área interna do Já: Frios e Crustáceos, com mesas de madeira" onclick="openLightbox(this.src)" onerror="this.alt='Fotografia não encontrada. Verifique a pasta imagens.'">
+          <div class="gallery-thumbs" aria-label="Galeria de fotos do Já: Frios e Crustáceos">
+            <button class="gallery-thumb active" type="button" data-src="imagens/ja-frios-01.jpg" aria-label="Ver foto 1"><img src="imagens/ja-frios-01.jpg" alt=""></button>
+            <button class="gallery-thumb" type="button" data-src="imagens/ja-frios-02.jpg" aria-label="Ver foto 2"><img src="imagens/ja-frios-02.jpg" alt=""></button>
+            <button class="gallery-thumb" type="button" data-src="imagens/ja-frios-03.jpg" aria-label="Ver foto 3"><img src="imagens/ja-frios-03.jpg" alt=""></button>
+          </div>
+        </div>
+        <div class="restaurant-body">
+          <div class="restaurant-top">
+            <div>
+              <h2 class="restaurant-title">Já: Frios e Crustáceos</h2>
+              <p class="restaurant-category">Frutos do mar · Bancários</p>
+            </div>
+            <div class="rating" aria-label="Avaliação 4,7 de 5">★ 4,7</div>
+          </div>
+          <p class="restaurant-address"><span aria-hidden="true">📍</span><span>Rua Bancário Waldemar de Mesquita Accioly, 1323 – Bancários, João Pessoa – PB, 58051-420.</span></p>
+          <h3 class="access-heading">Recursos de acessibilidade informados</h3>
+          <div class="access-grid">
+            <div class="access-item"><span class="check" aria-hidden="true">✓</span> Rampa de acesso</div>
+            <div class="access-item"><span class="check" aria-hidden="true">✓</span> Banheiro com espaço ampliado</div>
+            <div class="access-item"><span class="check" aria-hidden="true">✓</span> Mesa acessível</div>
+            <div class="access-item"><span class="check" aria-hidden="true">✓</span> Atendimento com equipe preparada</div>
+          </div>
+          <p class="info-note">As informações sobre a rampa, o banheiro, a mesa acessível, o atendimento e a avaliação foram fornecidas para este cadastro. Recomenda-se confirmar diretamente com o estabelecimento as condições atuais antes da visita.</p>
+          <a class="map-link" href="https://www.google.com/maps/search/?api=1&query=Ja+Frios+e+Crustaceos+Rua+Bancario+Waldemar+de+Mesquita+Accioly+1323+Joao+Pessoa+PB" target="_blank" rel="noopener noreferrer">↗ Ver localização no mapa</a>
+        </div>
+      </article>
+
+
+      <article class="card restaurant-card" id="peixada-gold-card"
+        data-name="Peixada Gold" data-bairro="Bancários" data-culinaria="Frutos do mar"
+        data-access="mobilidade">
+        <div class="restaurant-cover">
+          <img class="gallery-main" src="imagens/peixada-gold-01.jpg" alt="Fotografia da Peixada Gold" loading="lazy" onclick="openLightbox(this.src)" onerror="this.alt='Não foi possível carregar a fotografia.'">
+        </div>
+        <div class="restaurant-body">
+          <div class="restaurant-top"><div><h2 class="restaurant-title">Peixada Gold</h2><p class="restaurant-category">Frutos do mar · Bancários</p></div><div class="rating" aria-label="Avaliação 4,4 de 5">★ 4,4</div></div>
+          <p class="restaurant-address"><span aria-hidden="true">📍</span><span>Rua Bancário Waldemar de Mesquita Accioly, 1466 – Bancários, João Pessoa – PB, 58051-420.</span></p>
+          <h3 class="access-heading">Recursos de acessibilidade informados</h3>
+          <div class="access-grid"><div class="access-item"><span class="check" aria-hidden="true">✓</span> Rampa de acesso</div><div class="access-item"><span class="check" aria-hidden="true">✓</span> Banheiro acessível</div><div class="access-item"><span class="check" aria-hidden="true">✓</span> Iluminação adequada</div></div>
+          <p class="info-note">Avaliação e recursos informados para este cadastro. Confirme diretamente com o estabelecimento as condições atuais de acessibilidade antes da visita.</p>
+          <a class="map-link" href="https://www.google.com/maps/search/?api=1&query=Peixada+Gold+Rua+Bancario+Waldemar+de+Mesquita+Accioly+1466+Joao+Pessoa+PB" target="_blank" rel="noopener noreferrer">Ver localização no mapa</a>
+        </div>
+      </article>
+
+      <article class="card restaurant-card" id="arrecife-card"
+        data-name="Arrecife Restaurante e Libras Gourmet" data-bairro="Tambaú" data-culinaria="Culinária regional e frutos do mar"
+        data-access="auditiva visual">
+        <div class="restaurant-cover">
+          <img class="gallery-main" src="imagens/arrecife-01.jpg" alt="Fotografia ilustrativa do Arrecife — Libras Gourmet" loading="lazy" onclick="openLightbox(this.src)" onerror="this.alt='Não foi possível carregar a fotografia.'">
+        </div>
+        <div class="restaurant-body">
+          <div class="restaurant-top"><div><h2 class="restaurant-title">Arrecife (Restaurante e Libras Gourmet)</h2><p class="restaurant-category">Culinária regional e frutos do mar · Tambaú</p></div><div class="rating" aria-label="Avaliação informada de 4,8 de 5">★ 4,8</div></div>
+          <p class="restaurant-address"><span aria-hidden="true">📍</span><span>Av. Almirante Tamandaré, 1420 – Tambaú, João Pessoa – PB, 58039-010.</span></p>
+          <h3 class="access-heading">Recursos de acessibilidade informados</h3>
+          <div class="access-grid"><div class="access-item"><span class="check" aria-hidden="true">✓</span> Atendimento em Libras</div><div class="access-item"><span class="check" aria-hidden="true">✓</span> Cardápio visual e totens</div><div class="access-item"><span class="check" aria-hidden="true">✓</span> Sinalização luminosa</div><div class="access-item"><span class="check" aria-hidden="true">✓</span> Rotas internas organizadas</div></div>
+          <p class="info-note"><strong>Atenção:</strong> o endereço foi identificado pelo próprio solicitante como fictício. Este cadastro é ilustrativo e não deve ser usado para navegação ou visita sem confirmação de um endereço real. A avaliação e os recursos são informações fornecidas, não verificação independente.</p>
+        </div>
+      </article>
+
+      <article class="card restaurant-card" id="farol-card"
+        data-name="O Farol do Cabo" data-bairro="Cabo Branco" data-culinaria="Bar e restaurante"
+        data-access="mobilidade visual">
+        <div class="restaurant-cover">
+          <img class="gallery-main" src="imagens/farol-do-cabo-fachada.jpg" alt="Fachada ilustrativa de O Farol do Cabo, com rampa de acesso" onclick="openLightbox(this.src)">
+          <div class="gallery-thumbs" aria-label="Galeria de fotos de O Farol do Cabo">
+            <button class="gallery-thumb active" type="button" data-src="imagens/farol-do-cabo-fachada.jpg" aria-label="Ver fachada"><img src="imagens/farol-do-cabo-fachada.jpg" alt=""></button>
+            <button class="gallery-thumb" type="button" data-src="imagens/farol-do-cabo-interior.jpg" aria-label="Ver salão e banheiro"><img src="imagens/farol-do-cabo-interior.jpg" alt=""></button>
+          </div>
+        </div>
+        <div class="restaurant-body">
+          <div class="restaurant-top"><div><h2 class="restaurant-title">O Farol do Cabo (Bar e Restaurante)</h2><p class="restaurant-category">Bar e restaurante · Cabo Branco</p></div><div class="rating" aria-label="Avaliação informada de 4,5 de 5">★ 4,5</div></div>
+          <p class="restaurant-address"><span aria-hidden="true">📍</span><span>Av. Cabo Branco, 2840 – Cabo Branco, João Pessoa – PB, 58045-010.</span></p>
+          <p style="line-height:1.65;color:var(--text-muted);font-size:.88rem;margin:12px 0">Restaurante e bar à beira-mar com foco na culinária regional paraibana, frutos do mar frescos e drinks autorais, em ambiente amplo e confortável com vista para a orla.</p>
+          <h3 class="access-heading">Recursos de acessibilidade informados</h3>
+          <div class="access-grid"><div class="access-item"><span class="check" aria-hidden="true">✓</span> Rampa de acesso</div><div class="access-item"><span class="check" aria-hidden="true">✓</span> Banheiro com espaço ampliado</div><div class="access-item"><span class="check" aria-hidden="true">✓</span> Corredores amplos</div><div class="access-item"><span class="check" aria-hidden="true">✓</span> Piso tátil direcional e de alerta</div></div>
+          <p class="info-note">Descrição, avaliação e recursos informados para este cadastro. Confirme diretamente com o estabelecimento as condições atuais e a continuidade dos recursos antes da visita.</p>
+          <a class="map-link" href="https://www.google.com/maps/search/?api=1&query=O+Farol+do+Cabo+Av+Cabo+Branco+2840+Joao+Pessoa+PB" target="_blank" rel="noopener noreferrer">Ver localização no mapa</a>
+        </div>
+      </article>
+
+      <div class="no-results" id="no-results">
+        <strong>Nenhum estabelecimento encontrado.</strong>
+        <p style="margin-top:7px">Tente alterar os filtros selecionados.</p>
+      </div>
+    </section>
+
+    <section id="tab-sobre" class="tab-content">
+      <div class="card about-card">
+        <h2>Sobre o Paladar Acessível</h2>
+        <p>O Paladar Acessível é uma plataforma que reúne informações sobre restaurantes em João Pessoa, incluindo localização, tipos de acessibilidade, fotografias e avaliações. A proposta é facilitar a escolha de estabelecimentos por pessoas com deficiência, familiares e turistas.</p>
+        <p>Nosso objetivo é ampliar o acesso à informação e incentivar uma gastronomia mais inclusiva. Os dados publicados devem ser confirmados e atualizados sempre que necessário.</p>
+        <span class="dev-credit">Desenvolvido por Emanuel Pierry</span>
+      </div>
+    </section>
+
+    <section id="tab-recursos" class="tab-content">
+      <div class="hero-section">
+        <h1 class="hero-title">Critérios de acessibilidade</h1>
+        <p class="hero-subtitle">Conheça alguns dos recursos observados nos estabelecimentos cadastrados.</p>
+      </div>
+      <div class="resources-grid">
+        <div class="resource-item"><h3>♿ Mobilidade reduzida</h3><p>Rampas, entradas sem degraus, portas adequadas, circulação interna livre e banheiros acessíveis.</p></div>
+        <div class="resource-item"><h3>👁️ Deficiência visual</h3><p>Piso tátil, sinalização adequada, cardápios acessíveis, fonte ampliada ou compatibilidade com leitores de tela.</p></div>
+        <div class="resource-item"><h3>🧏 Deficiência auditiva</h3><p>Atendimento em Libras, comunicação escrita e recursos visuais para facilitar a comunicação.</p></div>
+        <div class="resource-item"><h3>🧩 Autismo e neurodiversidade</h3><p>Ambientes com controle de ruído, iluminação confortável e possibilidade de acomodação em áreas mais tranquilas.</p></div>
+      </div>
+    </section>
+
+    <section id="tab-sugerir" class="tab-content">
+      <div class="card form-wrap">
+        <h2>Indique um estabelecimento</h2>
+        <p class="form-intro">Envie uma indicação para análise. As sugestões ficam pendentes até serem avaliadas pela equipe do Paladar Acessível.</p>
+        <form id="suggest-form">
+          <div class="form-group"><label class="form-label" for="restaurant-name">Nome do restaurante</label><input id="restaurant-name" name="restaurant" class="custom-input" type="text" maxlength="120" placeholder="Ex.: Restaurante Mar Azul" required></div>
+          <div class="form-group"><label class="form-label" for="restaurant-address">Endereço completo</label><input id="restaurant-address" name="address" class="custom-input" type="text" maxlength="240" placeholder="Rua, número, bairro e cidade" required></div>
+          <div class="form-group"><label class="form-label" for="restaurant-neighborhood">Bairro</label><input id="restaurant-neighborhood" name="neighborhood" class="custom-input" type="text" maxlength="80" placeholder="Ex.: Cabo Branco" required></div>
+          <div class="form-group"><label class="form-label" for="restaurant-category">Tipo de estabelecimento / culinária</label><input id="restaurant-category" name="category" class="custom-input" type="text" maxlength="100" placeholder="Ex.: Restaurante regional"></div>
+          <div class="form-group"><label class="form-label" for="restaurant-resources">Recursos de acessibilidade observados</label><textarea id="restaurant-resources" name="resources" class="custom-input" rows="4" maxlength="2000" placeholder="Descreva rampas, banheiro, Libras, cardápio acessível, piso tátil etc." required></textarea></div>
+          <div class="form-group"><label class="form-label" for="suggestion-email">Seu e-mail (opcional)</label><input id="suggestion-email" name="email" class="custom-input" type="email" maxlength="180" placeholder="Para contato caso precisemos confirmar informações"></div>
+          <div style="position:absolute;left:-10000px" aria-hidden="true"><label for="website">Não preencher</label><input id="website" name="website" type="text" tabindex="-1" autocomplete="off"></div>
+          <button class="submit-btn" type="submit" id="suggest-submit">Enviar sugestão</button>
+          <p class="form-message" id="form-message" role="status" aria-live="polite"></p>
+          <p class="info-note">Ao enviar, você concorda que as informações sejam usadas para avaliar a indicação. Não envie dados pessoais sensíveis. A publicação não é automática: cada sugestão precisa de revisão.</p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer>© 2026 Paladar Acessível · Gastronomia inclusiva em João Pessoa, PB.</footer>
+
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Visualização ampliada da fotografia" onclick="closeLightbox(event)">
+    <button class="lightbox-close" type="button" aria-label="Fechar imagem" onclick="closeLightbox()">×</button>
+    <img id="lightbox-image" src="" alt="Fotografia ampliada do restaurante">
+  </div>
+
+  <script>
+    const tabs = ["inicio", "sobre", "recursos", "sugerir"];
+    function switchTab(tab) {
+      if (!tabs.includes(tab)) return;
+      document.querySelectorAll(".tab-content").forEach(section => section.classList.remove("active"));
+      document.querySelectorAll(".nav-btn").forEach(button => {
+        button.classList.remove("active");
+        button.removeAttribute("aria-current");
+      });
+      document.getElementById("tab-" + tab).classList.add("active");
+      const activeButton = document.getElementById("tab-btn-" + tab);
+      activeButton.classList.add("active");
+      activeButton.setAttribute("aria-current", "page");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function toggleContrast() {
+      const enabled = document.body.classList.toggle("high-contrast");
+      const button = document.getElementById("contrast-btn");
+      button.setAttribute("aria-pressed", String(enabled));
+    }
+
+    let fontScale = 1;
+    function changeFontSize(direction) {
+      fontScale = Math.max(.85, Math.min(1.25, fontScale + direction * .05));
+      document.documentElement.style.fontSize = (16 * fontScale) + "px";
+    }
+
+    const activeFilters = new Set();
+    document.querySelectorAll(".filter-chip").forEach(chip => {
+      chip.addEventListener("click", () => {
+        const filter = chip.dataset.filter;
+        if (activeFilters.has(filter)) activeFilters.delete(filter);
+        else activeFilters.add(filter);
+        chip.classList.toggle("active", activeFilters.has(filter));
+        chip.setAttribute("aria-pressed", String(activeFilters.has(filter)));
+        applyFilters();
+      });
+    });
+
+    ["search-name", "select-bairro", "select-culinaria"].forEach(id => {
+      document.getElementById(id).addEventListener("input", applyFilters);
+      document.getElementById(id).addEventListener("change", applyFilters);
+    });
+
+    function applyFilters() {
+      const cards = [...document.querySelectorAll(".restaurant-card")];
+      const search = document.getElementById("search-name").value.trim().toLocaleLowerCase("pt-BR");
+      const bairro = document.getElementById("select-bairro").value;
+      const culinaria = document.getElementById("select-culinaria").value;
+      let visible = 0;
+      cards.forEach(card => {
+        const access = (card.dataset.access || "").split(" ");
+        const accessMatch = [...activeFilters].every(filter => access.includes(filter));
+        const matches = card.dataset.name.toLocaleLowerCase("pt-BR").includes(search)
+          && (!bairro || card.dataset.bairro === bairro)
+          && (!culinaria || card.dataset.culinaria === culinaria)
+          && accessMatch;
+        card.style.display = matches ? "" : "none";
+        if (matches) visible++;
+      });
+      document.getElementById("no-results").style.display = visible ? "none" : "block";
+      document.getElementById("results-count").textContent = `${visible} ${visible === 1 ? "estabelecimento encontrado" : "estabelecimentos encontrados"}`;
+    }
+
+    document.querySelectorAll(".gallery-thumb").forEach(thumb => {
+      thumb.addEventListener("click", () => {
+        const card = thumb.closest(".restaurant-card");
+        const mainPhoto = card.querySelector(".gallery-main");
+        mainPhoto.src = thumb.dataset.src;
+        card.querySelectorAll(".gallery-thumb").forEach(item => item.classList.remove("active"));
+        thumb.classList.add("active");
+      });
+    });
+
+    function openLightbox(src) {
+      const lightbox = document.getElementById("lightbox");
+      document.getElementById("lightbox-image").src = src;
+      lightbox.classList.add("open");
+      document.body.style.overflow = "hidden";
+      document.querySelector(".lightbox-close").focus();
+    }
+    function closeLightbox(event) {
+      if (event && event.target !== document.getElementById("lightbox")) return;
+      document.getElementById("lightbox").classList.remove("open");
+      document.body.style.overflow = "";
+    }
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape") {
+        document.getElementById("lightbox").classList.remove("open");
+        document.body.style.overflow = "";
+      }
+    });
+
+    // Configure no painel do Supabase: URL do projeto e chave anon/public.
+    // A chave anon pode ficar no navegador quando as políticas RLS estiverem ativas.
+    const SUPABASE_URL = "https://pqnsrlfvfotpgbouwate.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_7yvFVBbzn0I0y8eXdRXMIw_JqBsuQn9";
+
+    document.getElementById("suggest-form").addEventListener("submit", async event => {
+      event.preventDefault();
+      const form = event.currentTarget;
+      const message = document.getElementById("form-message");
+      const submit = document.getElementById("suggest-submit");
+      const data = new FormData(form);
+      if (String(data.get("website") || "").trim()) return; // honeypot anti-spam
+      if (!SUPABASE_URL.startsWith("https://") || SUPABASE_ANON_KEY.startsWith("COLE_")) {
+        message.className = "form-message error";
+        message.textContent = "O formulário está pronto, mas o banco ainda não foi conectado. Configure a URL e a chave pública do Supabase no final do arquivo index.html e execute o arquivo banco_sugestoes.sql no SQL Editor do Supabase.";
+        message.style.display = "block";
+        return;
+      }
+      const payload = {
+        restaurante: String(data.get("restaurant") || "").trim(),
+        endereco: String(data.get("address") || "").trim(),
+        bairro: String(data.get("neighborhood") || "").trim(),
+        categoria: String(data.get("category") || "").trim() || null,
+        recursos_acessibilidade: String(data.get("resources") || "").trim(),
+        email_sugerente: String(data.get("email") || "").trim() || null,
+        status: "pendente"
+      };
+      submit.disabled = true;
+      submit.textContent = "Enviando...";
+      message.style.display = "none";
+      try {
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/sugestoes`, {
+          method: "POST",
+          headers: {
+            "apikey": SUPABASE_ANON_KEY,
+            "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
+            "Content-Type": "application/json",
+            "Prefer": "return=minimal"
+          },
+          body: JSON.stringify(payload)
+        });
+        if (!response.ok) {
+          const details = await response.text();
+          throw new Error(details || `HTTP ${response.status}`);
+        }
+        form.reset();
+        message.className = "form-message success";
+        message.textContent = "Sugestão enviada com sucesso! Ela foi registrada como pendente e será analisada antes de aparecer no site.";
+      } catch (error) {
+        console.error("Falha ao enviar sugestão:", error);
+        message.className = "form-message error";
+        message.textContent = "Não foi possível enviar agora. Verifique a conexão e as configurações do Supabase e tente novamente.";
+      } finally {
+        message.style.display = "block";
+        submit.disabled = false;
+        submit.textContent = "Enviar sugestão";
+      }
+    });
+  </script>
+</body>
+</html>
